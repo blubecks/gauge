@@ -62,10 +62,10 @@ public class Gauge extends View {
 		canvas.drawCircle(0, 0, r*0.95f, paint);
 		paint.setShader(new LinearGradient(0, r, 0, -r, Color.BLACK, Color.GRAY, TileMode.CLAMP));
 		canvas.drawCircle(0, 0, r*0.93f, paint);
-		
+
 		paint.setShader(new LinearGradient(-r,r,r,0,				
 				new int[]{Color.GREEN,Color.YELLOW,Color.RED}, null, TileMode.CLAMP));
-		
+
 		Log.d("x 0",(float) Math.cos(4/3*Math.PI)*r+"");
 		Log.d("y 1",(float) Math.sin(2/4*Math.PI)*(-r)+"");
 		Log.d("x 1",(float) Math.cos(2/4*Math.PI)*(r)+"");
@@ -79,7 +79,7 @@ public class Gauge extends View {
 				if(i==0) path.moveTo(x, y);
 				else path.lineTo(x, y);
 			}
-			
+
 			r = r*0.90f;
 			for (int i = 124; i >= 0; i--) {
 				float a = (float)(Math.PI*i/100);
@@ -89,10 +89,37 @@ public class Gauge extends View {
 				else path.lineTo(x, y);
 			}
 			path.close();
+			canvas.drawPath(path, paint);
+		}
+		float radius = r*0.88f;
+		path.reset();
+		paint.setShader(null);
+		paint.setColor(Color.WHITE);
+		if (path.isEmpty()){
+			
+			r=r*0.1f;
+			for (int i = 0; i <= 200; i++) {
+				float a = (float)(Math.PI*i/100);
+				float x = (float)(Math.cos(a)*r);
+				float y = (float)(Math.sin(a)*(r));
+				if(i==0){ path.moveTo(x, y);Log.d("Center",x+" "+y);}
+				else if(i==101) {
+					float x1 = x;
+					float y1 = y;
+					for(int j=0;j<100;j++)
+					path.lineTo((-j+x), (j+y));
+					//path.moveTo(x1, y1);
+				}
+				else path.lineTo(x, y);
+			}
+			path.close();
+			
+			//canvas.rotate(135);
+			canvas.drawPath(path, paint);
 		}
 
 
-		canvas.drawPath(path, paint);
+
 
 
 
