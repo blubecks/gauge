@@ -8,17 +8,16 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Shader.TileMode;
 import android.graphics.Path;
-import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
+
 
 public class Gauge extends View {
 
 	private Paint paint;
-	private ImageView imageView;
 	private Path path;
+	private float degres = 0;
 
 	public Gauge(Context context) {
 		this(context,null,0);
@@ -45,9 +44,6 @@ public class Gauge extends View {
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-		//		setMinimumHeight(300);
-		//		setMinimumWidth(300);
-		//		setMeasuredDimension(500, 500);
 	}
 
 	@Override
@@ -91,38 +87,38 @@ public class Gauge extends View {
 			path.close();
 			canvas.drawPath(path, paint);
 		}
-		float radius = r*0.88f;
 		path.reset();
 		paint.setShader(null);
 		paint.setColor(Color.WHITE);
 		if (path.isEmpty()){
-			
+
 			r=r*0.1f;
 			for (int i = 0; i <= 200; i++) {
 				float a = (float)(Math.PI*i/100);
 				float x = (float)(Math.cos(a)*r);
 				float y = (float)(Math.sin(a)*(r));
-				if(i==0){ path.moveTo(x, y);Log.d("Center",x+" "+y);}
-				else if(i==101) {
-					float x1 = x;
-					float y1 = y;
-					for(int j=0;j<100;j++)
-					path.lineTo((-j+x), (j+y));
-					//path.moveTo(x1, y1);
-				}
+				if(i==0) path.moveTo(x, y);
 				else path.lineTo(x, y);
 			}
 			path.close();
-			
-			//canvas.rotate(135);
+
+			//needle
 			canvas.drawPath(path, paint);
+			path.reset();
+			paint.setStyle(Style.FILL);
+			path.lineTo(0, -r*0.75f);
+			path.lineTo(-100,100 );
+			path.lineTo(0, r*0.75f);
+
+			canvas.rotate(degres);
+			canvas.drawPath(path, paint);
+			path.reset();
 		}
 
+	}
 
-
-
-
-
-
+	public void setDegres(float v){
+		this.degres = v;
+		invalidate();
 	}
 }
