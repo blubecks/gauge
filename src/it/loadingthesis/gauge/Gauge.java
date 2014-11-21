@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Path.Direction;
 import android.graphics.Shader.TileMode;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -34,9 +35,9 @@ public class Gauge extends View {
 	public Gauge(Context context, AttributeSet attrs, int defStyleAttr) {
 		super(context, attrs, defStyleAttr);
 		Log.d("constr","3");
+		this.setLayerType(LAYER_TYPE_SOFTWARE, null);
 		path = new Path();
 		paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		paint.setColor(0xff33ccff);//Color for background
 		paint.setStyle(Style.FILL);
 	}
 
@@ -87,32 +88,42 @@ public class Gauge extends View {
 			path.close();
 			canvas.drawPath(path, paint);
 		}
-		path.reset();
+		path.rewind();
 		paint.setShader(null);
 		paint.setColor(Color.WHITE);
 		if (path.isEmpty()){
 
 			r=r*0.1f;
-			for (int i = 0; i <= 200; i++) {
-				float a = (float)(Math.PI*i/100);
-				float x = (float)(Math.cos(a)*r);
-				float y = (float)(Math.sin(a)*(r));
-				if(i==0) path.moveTo(x, y);
-				else path.lineTo(x, y);
-			}
-			path.close();
 
-			//needle
+			//degree
 			canvas.drawPath(path, paint);
-			path.reset();
+			path.rewind();
+			for (int i=0; i<=10; i++) {
+				double d=-i*Math.PI/180*22.5;
+				double c1=Math.cos(d);
+				double s1=Math.sin(d);
+				path.moveTo((float)(c1*r*10),(float)(s1*r*10));
+				path.lineTo((float)(c1*r*0.9*10),(float)(s1*r*0.9*10));
+			}
+			paint.setStyle(Style.STROKE);
+			paint.setShader(null);
+			paint.setColor(0xffffffff);
+			paint.setStrokeWidth(5);
+			canvas.drawPath(path, paint);
+			
+			//needle
+			path.rewind();
 			paint.setStyle(Style.FILL);
+			path.addCircle(0, 0, r, Direction.CCW);
 			path.lineTo(0, -r*0.75f);
 			path.lineTo(-100,100 );
 			path.lineTo(0, r*0.75f);
 
 			canvas.rotate(degres);
+			paint.setShadowLayer(4, -4, 4, 0x80000000);
 			canvas.drawPath(path, paint);
 			path.reset();
+			paint.setShadowLayer(0, 0, 0, 0);
 		}
 
 	}
