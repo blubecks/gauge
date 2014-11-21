@@ -116,7 +116,7 @@ public class Gauge extends View {
 			paint.setStyle(Style.FILL);
 			path.addCircle(0, 0, r, Direction.CCW);
 			path.lineTo(0, -r*0.75f);
-			path.lineTo(-100,100 );
+			path.lineTo(-w/5,w/5f);
 			path.lineTo(0, r*0.75f);
 
 			canvas.rotate(degres);
